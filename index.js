@@ -145,9 +145,11 @@ async function run() {
 
     // get all medicine for user in shop
     app.get("/shop-medicine", async (req, res) => {
-      
+      const filter = req.query.filter ? { category: req.query.filter } : {};
 
-      const result = await medicinesCollection.find().toArray();
+      const search = req.query.search ? {itemName: { $regex: req.query.search, $options: "i" }} : {};
+
+      const result = await medicinesCollection.find({ ...filter, ...search }).toArray();
       res.send(result);
     });
 
